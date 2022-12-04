@@ -16,7 +16,7 @@ exports.handler = async (event, _, callback) => {
 
         let page = await browser.newPage();
 
-        await page.goto(event.url);
+        await page.goto(`https://www.css.app/component/${event.id}/preview`);
 
         const image = await page.screenshot();
 
@@ -25,7 +25,7 @@ exports.handler = async (event, _, callback) => {
 
         const data = await axios({
             method: 'put',
-            url: `https://api.css.app/posts/clb7v8tvq0004l88wub12rddv`,
+            url: `https://api.css.app/posts//${event.id}`,
             data: {
                 generatedImage: `data:${mimeType};base64,${b64}`,
             },
