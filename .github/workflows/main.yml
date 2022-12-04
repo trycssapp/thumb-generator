@@ -1,8 +1,8 @@
 name: update the AWS lambda
 on: [push]
 jobs:
-  deploy_source:
-    name: build and deploy lambda
+  zip_project:
+    name: generate zip folder
     strategy:
       matrix:
         node-version: [14.x]
@@ -23,11 +23,15 @@ jobs:
         uses: montudor/action-zip@v0.1.0
         with:
           args: zip -qq -r ./bundle.zip ./
-      - name: default deploy
-        uses: appleboy/lambda-action@master
+          
+  upload:
+    name: upload to S3
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: shallwefootball/s3-upload-action@master
         with:
-          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws_region: eu-west-1
-          function_name: generate-thumbnails
-          zip_file: bundle.zip
+          aws_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
+          aws_bucket: ${{ secrets.AWS_BUCKET_NAME }}
+          source_dir: 'dirname'
