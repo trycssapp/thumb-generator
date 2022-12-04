@@ -23,3 +23,11 @@ jobs:
         uses: montudor/action-zip@v0.1.0
         with:
           args: zip -qq -r ./bundle.zip ./
+      - name: Upload to S3
+        uses: shallwefootball/s3-upload-action@master
+        id: S3
+        with:
+          aws_key_id: ${{secrets.AWS_ACCESS_KEY_ID}}
+          aws_secret_access_key: ${{secrets.AWS_ACCESS_KEY_ID}}
+          aws_bucket: ${{secrets.AWS_BUCKET_NAME}}
+          source_dir: /
