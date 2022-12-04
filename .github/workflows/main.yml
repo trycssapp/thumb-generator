@@ -1,7 +1,7 @@
-name: Continuous Integration
-on:
-  push:
-  pull_request:
+name: Deploy for preview
+
+on: [push]
+
 jobs:
   zip_folder:
     runs-on: ubuntu-latest
