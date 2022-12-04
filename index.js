@@ -1,3 +1,4 @@
+const { default: axios } = require('axios');
 const chromium = require('chrome-aws-lambda');
 
 exports.handler = async (event, _, callback) => {
@@ -17,9 +18,19 @@ exports.handler = async (event, _, callback) => {
 
         await page.goto(event.url);
 
-        const shot = await page.screenshot();
+        const image = await page.screenshot();
 
-        result = shot;
+        const b64 = Buffer.from(image).toString('base64');
+        const mimeType = 'image/png';
+
+        const data = await axios({
+            method: 'put',
+            url: `https://api.css.app/posts/clb7v8tvq0004l88wub12rddv`,
+            data: {
+                generatedImage: `data:${mimeType};base64,${b64}`,
+            },
+        });
+        result = data.data;
     } catch (error) {
         return callback(error);
     } finally {
