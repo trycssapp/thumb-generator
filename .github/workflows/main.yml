@@ -11,7 +11,8 @@ jobs:
         uses: montudor/action-zip@v1
 
       - name: Zip output
-        run: zip -qq -r dir.zip .
+        with:
+          args: zip -qq -r bundle.zip ./
       - uses: actions/checkout@master
       - uses: jakejarvis/s3-sync-action@master
         with:
