@@ -1,13 +1,10 @@
-name: Deploy for preview
-
-on: [push]
-
+name: Continuous Integration
+on:
+  push:
+  pull_request:
 jobs:
-  preview:
+  zip_folder:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [14.x]
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
@@ -21,11 +18,21 @@ jobs:
         env:
           CI: true
       - name: zip
-        uses: montudor/action-zip@v0.1.0
+      - uses: montudor/action-zip@v1
         with:
-          args: zip -qq -r ./bundle.zip ./
-      - name: upload to s3
-        uses: jakejarvis/s3-sync-action@master
+          args: zip -qq -r bundle.zip ./
+      - uses: actions/upload-artifact@v2
+        with:
+          name: bundle.zip
+  upload:
+    needs:  zip_folder
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/download-artifact@v2
+        with:
+          name: vendor.zip
+      - uses: jakejarvis/s3-sync-action@master
         with:
           args: --acl public-read --follow-symlinks --delete
         env:
@@ -33,5 +40,5 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: 'us-west-1'   # optional: defaults to us-east-1
-          SOURCE_DIR: './bundle.zip'      # optional: defaults to entire repositoryname: Upload Website
+          SOURCE_DIR: 'bundle.zip'      # optional: defaults to entire repositoryname: Upload Website
 
