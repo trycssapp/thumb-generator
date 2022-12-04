@@ -11,11 +11,11 @@ jobs:
         uses: montudor/action-zip@v1
 
       - name: Zip output
-        run: zip -qq -r bin.zip bin/release/net5.0
+        run: zip -qq -r dir.zip .
       - uses: actions/checkout@master
       - uses: jakejarvis/s3-sync-action@master
         with:
-          args: --acl public-read --follow-symlinks --exclude '*' --include 'bin.zip' 
+          args: --acl public-read --follow-symlinks --exclude '*' --include 'dir.zip' 
         env:
           AWS_S3_BUCKET: ${{ secrets.AWS_BUCKET_NAME }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
