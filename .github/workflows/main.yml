@@ -1,12 +1,13 @@
-name: update the AWS lambda
-on: [push]
+name: Deploy for preview
+
+on: [pull_request]
+
 jobs:
-  zip_project:
-    name: generate zip folder
+  preview:
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [14.x]
-    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
@@ -23,11 +24,11 @@ jobs:
         uses: montudor/action-zip@v0.1.0
         with:
           args: zip -qq -r ./bundle.zip ./
-      - name: Upload to S3
-        uses: shallwefootball/s3-upload-action@master
+      - uses: shallwefootball/s3-upload-action@master
+        name: Upload S3
         id: S3
         with:
-          aws_key_id: ${{secrets.AWS_ACCESS_KEY_ID}}
-          aws_secret_access_key: ${{secrets.AWS_ACCESS_KEY_ID}}
-          aws_bucket: ${{secrets.AWS_BUCKET_NAME}}
-          source_dir: /
+          aws_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
+          aws_bucket: ${{ secrets.AWS_BUCKET_NAME }}
+          source_dir: '/'
