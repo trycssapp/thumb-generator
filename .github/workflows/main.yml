@@ -12,9 +12,6 @@ jobs:
         uses: montudor/action-zip@v0.1.0
         with:
           args: "zip -r bundle.zip ./."
-      - uses: actions/upload-artifact@v2
-        with:
-          name: bundle.zip
       - uses: actions/checkout@master
       - uses: jakejarvis/s3-sync-action@master
         with:
