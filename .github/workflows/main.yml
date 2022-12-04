@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@master
       - uses: jakejarvis/s3-sync-action@master
         with:
-          args: --acl public-read --follow-symlinks --exclude '*' --include 'dir.zip' 
+          args: --acl public-read --follow-symlinks --exclude '*' --include 'bundle.zip' 
         env:
           AWS_S3_BUCKET: ${{ secrets.AWS_BUCKET_NAME }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
