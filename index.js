@@ -19,18 +19,7 @@ exports.handler = async (event, _, callback) => {
         await page.goto(`https://www.css.app/component/${event.id}/preview`);
 
         const image = await page.screenshot();
-
-        const b64 = Buffer.from(image).toString('base64');
-        const mimeType = 'image/png';
-
-        const data = await axios({
-            method: 'put',
-            url: `https://api.css.app/posts//${event.id}`,
-            data: {
-                generatedImage: `data:${mimeType};base64,${b64}`,
-            },
-        });
-        result = data.data;
+        result = image;
     } catch (error) {
         return callback(error);
     } finally {
